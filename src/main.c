@@ -5,6 +5,8 @@
 #include <SDL2/SDL.h>
 #include <stdio.h>
 #include "rect.h"
+#include "circle.h"
+#include "color.h"
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
@@ -48,25 +50,23 @@ int main(int argc, char **args) {
 
     // set color for renderer as white
     SDL_SetRenderDrawColor (renderer, 0, 0, 255, 255);
-
+    circle_t c;
+    const int c_x = SCREEN_WIDTH / 2;
+    const int c_y = SCREEN_HEIGHT / 2;
     const int radius = 50;
-    for (int i = -radius; i <= radius; i++) {
-        for (int j = -radius; j <= radius; j++) {
-            if (i * i + j * j < radius * radius) {
-                printf("Drawing point %d %d\n", i, j);
-                SDL_RenderDrawPoint (renderer, i, j);
-            }
-        }
+    color_t color;
+    color_ctor (&color, 0, 0, 255, 0);
+    if (!circle_ctor(&c, c_x, c_y, radius, &color)) {
+        printf ("Brasko nieco sa nepodarilo\n");
+        return 1;
     }
+    circle_draw (renderer, &c);
 
-    // render rect
-    SDL_RenderFillRect (renderer, &r);
-
-    /// render rect to the screen
+    //SDL_RenderFillRect (renderer, &r);
     SDL_RenderPresent (renderer);
 
     SDL_Delay (5000);
-    SDL_DestroyWindow(window);
+    SDL_DestroyWindow (window);
     SDL_Quit();
     
     return EXIT_SUCCESS;
