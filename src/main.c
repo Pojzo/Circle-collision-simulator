@@ -4,6 +4,7 @@
 // run with: ./hello_sdl2
 #include <SDL2/SDL.h>
 #include <stdio.h>
+#include "rect.h"
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
@@ -14,7 +15,6 @@ typedef SDL_Rect Rect;
 int main(int argc, char **args) {
     (void) argc;
     (void) args;
-    printf("Som tu\n");
     SDL_Window* window = NULL;
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -44,17 +44,23 @@ int main(int argc, char **args) {
     SDL_RenderClear (renderer);
      
     Rect r;
-    r.x = 50;
-    r.y = 50;
-    r.w = 50;
-    r.h = 50;
+    rect_ctor (&r, 50, 50, 50, 50);
 
     // set color for renderer as white
     SDL_SetRenderDrawColor (renderer, 0, 0, 255, 255);
 
+    const int radius = 50;
+    for (int i = -radius; i <= radius; i++) {
+        for (int j = -radius; j <= radius; j++) {
+            if (i * i + j * j < radius * radius) {
+                printf("Drawing point %d %d\n", i, j);
+                SDL_RenderDrawPoint (renderer, i, j);
+            }
+        }
+    }
+
     // render rect
     SDL_RenderFillRect (renderer, &r);
-    printf("Vcul som tu\n");
 
     /// render rect to the screen
     SDL_RenderPresent (renderer);
