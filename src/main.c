@@ -1,4 +1,3 @@
-// // test
 #include <SDL2/SDL.h>
 #include <stdio.h>
 #include "rect.h"
@@ -11,6 +10,7 @@ const char *WINDOW_NAME = "Circles";
 typedef SDL_Rect Rect;
 
 void refresh_screen (SDL_Renderer *renderer);
+int handle_quit();
 
 int main(int argc, char **args) {
     (void) argc;
@@ -43,9 +43,9 @@ int main(int argc, char **args) {
 
     // set color for renderer as white
     circle_t c;
-    const int c_x = SCREEN_WIDTH / 2;
-    const int c_y = SCREEN_HEIGHT / 2;
-    const int radius = 50;
+    const float c_x = (float)SCREEN_WIDTH / 2;
+    const float c_y = (float)SCREEN_HEIGHT / 2;
+    const float radius = 50;
 
     color_t color;
     color_ctor (&color, 0, 0, 255, 0);
@@ -54,24 +54,24 @@ int main(int argc, char **args) {
         printf ("Brasko nieco sa nepodarilo\n");
         return 1;
     }
+    c.vel_x = 5;
+    c.vel_y = 5;
 
     // main loop
-    for (int i = 0; i < 100; i++) {
+    for (;;) {
         refresh_screen (renderer);
         circle_draw (renderer, &c);
         SDL_RenderPresent (renderer);
         SDL_Delay (DELAY_MS);
         circle_move (&c);
+
+        if (handle_quit()) {
+            printf ("Terminating program\n");
+            SDL_DestroyWindow (window);
+            SDL_Quit();
+            return EXIT_SUCCESS;
+        }
     }
-
-    printf ("Terminating program\n");
-    SDL_Delay (2000);
-    //SDL_RenderFillRect (renderer, &r);
-
-    SDL_DestroyWindow (window);
-    SDL_Quit();
-
-    return EXIT_SUCCESS;
 }
 
 void refresh_screen (SDL_Renderer *renderer) {
@@ -80,4 +80,15 @@ void refresh_screen (SDL_Renderer *renderer) {
 
     // clear window, create a white background
     SDL_RenderClear (renderer);
+}
+
+int handle_quit () {
+    SDL_Event evt;
+    while(SDL_PollEvent(&evt) != 0) {
+        switch (evt.type) {
+            case SDL_QUIT:    
+                return 1;
+        }
+    }
+    return 0;
 }

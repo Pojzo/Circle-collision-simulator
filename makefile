@@ -28,3 +28,6 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 clean:
 	$(RM) -r $(BUILDDIR) $(BINDIR)
 
+
+run: 
+	./bin/main

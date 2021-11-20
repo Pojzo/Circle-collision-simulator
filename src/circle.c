@@ -2,8 +2,9 @@
 #include "circle.h"
 #include "config.h"
 
+
 // constructor for structure Circle
-int circle_ctor (circle_t *c, int pos_x_, int pos_y_, int radius_, color_t *color_) {
+int circle_ctor (circle_t *c, float pos_x_, float pos_y_, float radius_, color_t *color_) {
     c->pos_x = pos_x_; // center x coordinate 
     c->pos_y = pos_y_; // center y coordinate 
     c->vel_x = 0; // x velocity
@@ -29,18 +30,19 @@ void circle_draw (SDL_Renderer *r, circle_t *c) {
 
 // move circle by, restrain circle from leaving window
 void circle_move (circle_t *c) {
-    if (c->pos_x + c->vel_x > SCREEN_WIDTH) {
+    if (c->pos_x + c->vel_x > SCREEN_WIDTH - c->radius / 2) {
         c->vel_x *= -1;
     }
-    if (c->pos_x + c->vel_x < 0) {
+    if (c->pos_x + c->vel_x < c->radius / 2) {
         c->vel_x *= -1;
     }
-    if (c->pos_y + c->vel_y > SCREEN_HEIGHT) {
+    if (c->pos_y + c->vel_y > SCREEN_HEIGHT - c->radius / 2) {
         c->vel_y *= -1;
     }
-    if (c->pos_y + c->vel_y < 0) {
+    if (c->pos_y + c->vel_y < c->radius / 2) {
         c->vel_y *= -1;
     }
+
     c->pos_x += c->vel_x;
     c->pos_y += c->vel_y;
 }
