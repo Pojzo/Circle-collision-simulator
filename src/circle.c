@@ -13,7 +13,7 @@ double floor(double num) {
 }
 
 // constructor for structure Circle
-circle_t *circle_ctor (float pos_x_, float pos_y_, float radius_, color_t *color_) {
+circle_t *circle_ctor (float pos_x_, float pos_y_, float radius_, int r_, int g_, int b_, int a_) {
 
     circle_t *circle = (circle_t *)malloc(sizeof(circle_t));
     
@@ -27,7 +27,10 @@ circle_t *circle_ctor (float pos_x_, float pos_y_, float radius_, color_t *color
     circle->vel_x = 0; // x velocity
     circle->vel_y = 0; // y velocity
     circle->radius = radius_; // radius of circle
-    circle->color = color_;
+    circle->r = r_;
+    circle->g = g_;
+    circle->b = b_;
+    circle->a = a_;
 
     return circle;
 }
@@ -40,7 +43,7 @@ void circle_draw (SDL_Renderer *r, circle_t *c) {
     for (double dy = 1; dy <= c->radius; dy += 1.0)
     {
         double dx = floor(sqrt((2.0 * c->radius * dy) - (dy * dy)));
-        SDL_SetRenderDrawColor(r, c->color->r, c->color->g, c->color->b, c->color->a);
+        SDL_SetRenderDrawColor(r, c->r, c->g, c->b, c->a);
         SDL_RenderDrawLine(r, c->pos_x - dx, c->pos_y + dy - c->radius, c->pos_x + dx, c->pos_y + dy - c->radius);
         SDL_RenderDrawLine(r, c->pos_x - dx, c->pos_y - dy + c->radius, c->pos_x + dx, c->pos_y - dy + c->radius);
     }
