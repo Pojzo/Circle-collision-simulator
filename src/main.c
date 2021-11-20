@@ -60,10 +60,10 @@ int main(int argc, char **args) {
     // main loop
     for (;;) {
         refresh_screen (renderer);
+        circle_move (&c);
         circle_draw (renderer, &c);
         SDL_RenderPresent (renderer);
         SDL_Delay (DELAY_MS);
-        circle_move (&c);
 
         if (handle_quit()) {
             printf ("Terminating program\n");

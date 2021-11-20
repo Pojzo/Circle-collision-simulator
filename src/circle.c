@@ -30,16 +30,16 @@ void circle_draw (SDL_Renderer *r, circle_t *c) {
 
 // move circle by, restrain circle from leaving window
 void circle_move (circle_t *c) {
-    if (c->pos_x + c->vel_x > SCREEN_WIDTH - c->radius / 2) {
+    if (c->pos_x + c->vel_x > SCREEN_WIDTH - c->radius) {
         c->vel_x *= -1;
     }
-    if (c->pos_x + c->vel_x < c->radius / 2) {
+    if (c->pos_x + c->vel_x < c->radius) {
         c->vel_x *= -1;
     }
-    if (c->pos_y + c->vel_y > SCREEN_HEIGHT - c->radius / 2) {
+    if (c->pos_y + c->vel_y > SCREEN_HEIGHT - c->radius) {
         c->vel_y *= -1;
     }
-    if (c->pos_y + c->vel_y < c->radius / 2) {
+    if (c->pos_y + c->vel_y < c->radius) {
         c->vel_y *= -1;
     }
 
