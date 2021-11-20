@@ -2,17 +2,24 @@
 #include "circle.h"
 #include "config.h"
 
-
 // constructor for structure Circle
-int circle_ctor (circle_t *c, float pos_x_, float pos_y_, float radius_, color_t *color_) {
-    c->pos_x = pos_x_; // center x coordinate 
-    c->pos_y = pos_y_; // center y coordinate 
-    c->vel_x = 0; // x velocity
-    c->vel_y = 0; // y velocity
-    c->radius = radius_; // radius of circle
-    c->color = color_;
+circle_t *circle_ctor (float pos_x_, float pos_y_, float radius_, color_t *color_) {
 
-    return 1;
+    circle_t *circle = (circle_t *)malloc(sizeof(circle_t));
+    
+    // if malloc failed
+    if (circle == NULL) {
+        return circle;
+    }
+
+    circle->pos_x = pos_x_; // center x coordinate 
+    circle->pos_y = pos_y_; // center y coordinate 
+    circle->vel_x = 0; // x velocity
+    circle->vel_y = 0; // y velocity
+    circle->radius = radius_; // radius of circle
+    circle->color = color_;
+
+    return circle;
 }
 
 // draw circle to SDL_Renderer
@@ -46,3 +53,12 @@ void circle_move (circle_t *c) {
     c->pos_x += c->vel_x;
     c->pos_y += c->vel_y;
 }
+
+void circle_set_vel_x(circle_t *c, float vel_x_) {
+    c->vel_x = vel_x_;
+}
+
+void circle_set_vel_y(circle_t *c, float vel_y_) {
+    c->vel_y = vel_y_;
+}
+

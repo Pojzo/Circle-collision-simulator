@@ -13,8 +13,10 @@ typedef struct Circle {
     color_t *color;
 } circle_t;
 
-int circle_ctor (circle_t *c, float pos_x_, float pos_y_, float radius_, color_t *color_);
+circle_t  *circle_ctor (float pos_x_, float pos_y_, float radius_, color_t *color_);
 void circle_draw (SDL_Renderer *r, circle_t *c);
 void circle_move (circle_t *c);
+void circle_set_vel_x(circle_t* c, float vel_x_);
+void circle_set_vel_y(circle_t* c, float vel_y_);
 
 #endif
