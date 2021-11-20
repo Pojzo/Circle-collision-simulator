@@ -1,6 +1,16 @@
 #include <stdio.h>
 #include "circle.h"
 #include "config.h"
+#include <math.h>
+
+double floor(double num) {
+    long long n = (long long)num;
+    double d = (double)n;
+    if (d == num || num >= 0)
+        return d;
+    else
+        return d - 1;
+}
 
 // constructor for structure Circle
 circle_t *circle_ctor (float pos_x_, float pos_y_, float radius_, color_t *color_) {
@@ -25,13 +35,14 @@ circle_t *circle_ctor (float pos_x_, float pos_y_, float radius_, color_t *color
 // draw circle to SDL_Renderer
 // fill circle with specified color in constructor
 void circle_draw (SDL_Renderer *r, circle_t *c) {
-    SDL_SetRenderDrawColor (r, c->color->r, c->color->g, c->color->b, c->color->a);
-    for (int i = -c->radius; i <= c->radius; i++) {
-        for (int j = -c->radius; j <= c->radius; j++) {
-            if (i * i + j * j < c->radius * c->radius) {
-                SDL_RenderDrawPoint (r, c->pos_x + i, c->pos_y + j);
-            }
-        }
+    // credit to https://gist.github.com/derofim/912cfc9161269336f722
+
+    for (double dy = 1; dy <= c->radius; dy += 1.0)
+    {
+        double dx = floor(sqrt((2.0 * c->radius * dy) - (dy * dy)));
+        SDL_SetRenderDrawColor(r, c->color->r, c->color->g, c->color->b, c->color->a);
+        SDL_RenderDrawLine(r, c->pos_x - dx, c->pos_y + dy - c->radius, c->pos_x + dx, c->pos_y + dy - c->radius);
+        SDL_RenderDrawLine(r, c->pos_x - dx, c->pos_y - dy + c->radius, c->pos_x + dx, c->pos_y - dy + c->radius);
     }
 }
 
