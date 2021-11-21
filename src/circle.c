@@ -27,6 +27,9 @@ circle_t *circle_ctor (float pos_x_, float pos_y_, float radius_, int r_, int g_
     circle->vel_x = 0; // x velocity
     circle->vel_y = 0; // y velocity
     circle->radius = radius_; // radius of circle
+
+    circle->mass = DEFAULT_CIRCLE_MASS; // mass
+    // colors 
     circle->r = r_;
     circle->g = g_;
     circle->b = b_;
@@ -68,11 +71,30 @@ void circle_move (circle_t *c) {
     c->pos_y += c->vel_y;
 }
 
+// set x velocity of circle
 void circle_set_vel_x(circle_t *c, float vel_x_) {
     c->vel_x = vel_x_;
 }
 
+// set y velocity of circle
 void circle_set_vel_y(circle_t *c, float vel_y_) {
     c->vel_y = vel_y_;
 }
 
+void collide(circle_t *circle, circle_t *collider) {
+    float temp_x = circle->vel_x;
+    float temp_y = circle->vel_y;
+
+    circle->vel_x = collider->vel_x;
+    circle->vel_y = collider->vel_y;
+
+    collider->vel_x = temp_x;
+    collider->vel_y = temp_y;
+    /*
+    circle->vel_x = (circle->vel_x * (circle->mass - collider->mass) + (2 * collider->mass * collider->vel_x) / (circle->mass + collider->mass));
+    circle->vel_y = (circle->vel_y * (circle->mass - collider->mass) + (2 * collider->mass * collider->vel_y) / (circle->mass + collider->mass));
+
+    collider->vel_x = (collider->vel_x * (collider->mass - circle->mass) + (2 * circle->mass * circle->vel_x) / (collider->mass + circle->mass));
+    collider->vel_y = (collider->vel_y * (collider->mass - circle->mass) + (2 * circle->mass * circle->vel_y) / (collider->mass + circle->mass));
+    */
+}
