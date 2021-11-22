@@ -30,7 +30,7 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    const int num_circles = 10;
+    int num_circles = atoi(argv[1]);
     const int radius = 30;
     circle_t *circles[num_circles];  // test circle
     for (int i = 0; i < num_circles; i++) {
@@ -44,10 +44,10 @@ int main(int argc, char **argv) {
     for (;;) {
         refresh_screen(renderer);
         for (int i = 0; i < num_circles; i++) {
-            detect_collision(circles, num_circles);
             circle_move(circles[i]); // move circle with its velocity
             circle_draw(renderer, circles[i]); // draw circle to screen
         }
+        detect_collision(circles, num_circles);
         SDL_RenderPresent(renderer); //
         SDL_Delay(DELAY_MS); // add delay between frames
 
@@ -118,6 +118,7 @@ void detect_collision(circle_t **circles, int num_circles) {
             diff_x = abs(circles[i]->pos_x - circles[j]->pos_x);
             diff_y = abs(circles[i]->pos_y - circles[j]->pos_y);
             distance = diff_x * diff_x + diff_y * diff_y; // use pythagoeran therom to calculate distance
+            //minimum_distance = circles[i]->radius + circles[j]->radius;
             minimum_distance = (circles[i]->radius + circles[j]->radius) * (circles[i]->radius + circles[j]->radius);
 
             if (distance < minimum_distance) { // if the distance is smalle

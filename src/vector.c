@@ -1,6 +1,7 @@
 #include "vector.h"
 #include <stdlib.h>
 #include <assert.h>
+#include <stdio.h>
 
 // constructor for Pair
 vector_t *vector_create(float x_, float y_) {
@@ -14,7 +15,7 @@ vector_t *vector_create(float x_, float y_) {
 // perform dot product on two vectors 
 float vector_dot_product(vector_t *first, vector_t *second) {
     assert(first != NULL && second != NULL) ;
-    float result = first->x * second->x + first->y + second->y;
+    float result = first->x * second->x + first->y * second->y;
 
     return result;
 }
@@ -29,4 +30,14 @@ vector_t *vector_multiply(vector_t *v, float l) {
 vector_t *vector_subtract(vector_t *first, vector_t *second) {
     assert(first != NULL && second != NULL);
     return vector_create(first->x - second->x, first->y - second->y);
+}
+
+// free vector from memory
+void vector_free(vector_t *v) {
+    free(v);
+}
+
+// print x and y coordinates of vector
+void vector_print(vector_t *v) {
+    printf("x: %f\ty: %f\n", v->x, v->y);
 }
