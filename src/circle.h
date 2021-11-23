@@ -2,14 +2,12 @@
 #define CIRCLE_H
 
 #include <SDL2/SDL.h>
+#include "vector.h"
 
 typedef struct Circle {
-    float pos_x;
-    float pos_y;
-    float vel_x;
-    float vel_y;
-    float next_vel_x;
-    float next_vel_y;
+    vector_t *pos;
+    vector_t *vel;
+    vector_t *next_vel;
     float radius;
     int mass;
     int r;
@@ -23,6 +21,7 @@ void circle_draw (SDL_Renderer *r, circle_t *c);
 void circle_move (circle_t *c);
 void circle_set_vel_x(circle_t *c, float vel_x_);
 void circle_set_vel_y(circle_t *c, float vel_y_);
+void circle_set_mass(circle_t *c, float mass);
 void collide(circle_t* circle, circle_t* collider);
 
 #endif
