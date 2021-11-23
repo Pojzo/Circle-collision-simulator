@@ -8,6 +8,8 @@ typedef struct Circle {
     float pos_y;
     float vel_x;
     float vel_y;
+    float next_vel_x;
+    float next_vel_y;
     float radius;
     int mass;
     int r;
