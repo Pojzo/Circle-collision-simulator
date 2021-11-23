@@ -32,6 +32,12 @@ vector_t *vector_subtract(vector_t *first, vector_t *second) {
     return vector_create(first->x - second->x, first->y - second->y);
 }
 
+// return copy of vector
+vector_t *vector_copy(vector_t *v) {
+    assert(v != NULL);
+    return vector_create(v->x, v->y);
+}
+
 // free vector from memory
 void vector_free(vector_t *v) {
     free(v);
@@ -41,3 +47,4 @@ void vector_free(vector_t *v) {
 void vector_print(vector_t *v) {
     printf("x: %f\ty: %f\n", v->x, v->y);
 }
+
