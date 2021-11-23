@@ -17,6 +17,7 @@ int main(int argc, char **argv) {
     // initializewindow
     window = init_window();
     
+    // if initialization failed
     if (window == NULL) {
         fprintf(stderr, "Could not create window.\n");
         return 1;
@@ -25,6 +26,7 @@ int main(int argc, char **argv) {
     // initialize renderer
     renderer = init_renderer(window);
 
+    // if initialization failed
     if (renderer == NULL) {
         fprintf(stderr, "Could not create renderer.\n");
         return 1;
@@ -34,13 +36,20 @@ int main(int argc, char **argv) {
     if (argc == 2) {
         num_circles = atoi(argv[1]);
     }
-    const int radius = 40;
-    circle_t *circles[num_circles];  // test circle
+
+    const float mass_size_multiplier = 10;
+    float radius; 
+    float mass; 
+    circle_t *circles[num_circles];  // array of circles
     for (int i = 0; i < num_circles; i++) {
+        mass = rand() % 50 + 20;
+        radius = mass;
+
         circle_t *circle;
-        circle = circle_ctor(rand() % (SCREEN_WIDTH - 2 * radius) + radius, (float)SCREEN_HEIGHT / 2, radius, rand() % 255, rand() % 255, rand() % 255, 255); // constructor for circle
+        circle = circle_ctor(rand() % (int)(SCREEN_WIDTH - 2 * radius) + radius, (float)SCREEN_HEIGHT / 2, radius, rand() % 255, rand() % 255, rand() % 255, 255); // constructor for circle
         circle_set_vel_x(circle, rand() % 10); // set x velocity of circle to 5
         circle_set_vel_y(circle, rand() % 10); // set y velocity of circle to 5
+        circle_set_mass(circle, mass);
         circles[i] = circle;
     }
 
@@ -118,8 +127,8 @@ void detect_collision(circle_t **circles, int num_circles) {
             if (i == j) {
                 continue;
             }
-            diff_x = circles[j]->pos_x - circles[i]->pos_x;
-            diff_y = circles[j]->pos_y - circles[i]->pos_y;
+            diff_x = circles[j]->pos->x - circles[i]->pos->x;
+            diff_y = circles[j]->pos->y - circles[i]->pos->y;
             distance = diff_x * diff_x + diff_y * diff_y; // use pythagoeran therom to calculate distance
             //minimum_distance = circles[i]->radius + circles[j]->radius;
             minimum_distance = (circles[i]->radius + circles[j]->radius) * (circles[i]->radius + circles[j]->radius);
