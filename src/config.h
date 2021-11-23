@@ -8,6 +8,7 @@ static const float DELAY_MS = 1000. / FPS;
 static const char WINDOW_NAME[]= "Window";
 
 static const int DEFAULT_CIRCLE_MASS = 1;
+static const int DEFAULT_NUM_CIRCLES = 5;
 
 static const int BACKGROUND_R = 255;
 static const int BACKGROUND_G = 255;
