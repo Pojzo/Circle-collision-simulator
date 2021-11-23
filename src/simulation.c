@@ -30,17 +30,20 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    int num_circles = atoi(argv[1]);
-    const int radius = 30;
+    int num_circles = 5;
+    if (argc == 2) {
+        num_circles = atoi(argv[1]);
+    }
+    const int radius = 40;
     circle_t *circles[num_circles];  // test circle
     for (int i = 0; i < num_circles; i++) {
         circle_t *circle;
-        circle = circle_ctor((i + 1) * radius * 2 + 20, i * radius * 2 + 20, radius, rand() % 255, rand() % 255, rand() % 255, 255); // constructor for circle
+        circle = circle_ctor(rand() % (SCREEN_WIDTH - 2 * radius) + radius, (float)SCREEN_HEIGHT / 2, radius, rand() % 255, rand() % 255, rand() % 255, 255); // constructor for circle
         circle_set_vel_x(circle, rand() % 10); // set x velocity of circle to 5
         circle_set_vel_y(circle, rand() % 10); // set y velocity of circle to 5
         circles[i] = circle;
     }
-    
+
     for (;;) {
         refresh_screen(renderer);
         for (int i = 0; i < num_circles; i++) {
@@ -111,12 +114,12 @@ void detect_collision(circle_t **circles, int num_circles) {
     float minimum_distance;
 
     for (int i = 0; i < num_circles; i++) {
-        for (int j = 0; j < num_circles; j++) {
+        for (int j = i + 1; j < num_circles; j++) {
             if (i == j) {
                 continue;
             }
-            diff_x = abs(circles[i]->pos_x - circles[j]->pos_x);
-            diff_y = abs(circles[i]->pos_y - circles[j]->pos_y);
+            diff_x = circles[j]->pos_x - circles[i]->pos_x;
+            diff_y = circles[j]->pos_y - circles[i]->pos_y;
             distance = diff_x * diff_x + diff_y * diff_y; // use pythagoeran therom to calculate distance
             //minimum_distance = circles[i]->radius + circles[j]->radius;
             minimum_distance = (circles[i]->radius + circles[j]->radius) * (circles[i]->radius + circles[j]->radius);
