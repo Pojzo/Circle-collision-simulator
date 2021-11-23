@@ -33,7 +33,7 @@ circle_t *circle_ctor (float pos_x_, float pos_y_, float radius_, int r_, int g_
     circle->vel_y = 0; // y velocity
     circle->radius = radius_; // radius of circle
 
-    circle->mass = DEFAULT_CIRCLE_MASS; // mass
+    circle->mass = CIRCLE_DEFAULT_MASS; // mass
     // colors 
     circle->r = r_;
     circle->g = g_;
@@ -98,32 +98,69 @@ void circle_set_vel_y(circle_t *c, float vel_y_) {
     c->vel_y = c->next_vel_y = vel_y_;
 }
 
+// set mass of circle
+void circle_set_mass(circle_t *c, float mass_) {
+    if (mass_ >= CIRCLE_MIN_MASS && mass_ <= CIRCLE_MAX_MASS) {
+        c->mass = mass_;
+    }
+    fprintf(stderr, "Mass is not in valid range\n");
+}
+
 // function that is called when two circles collide
 void collide(circle_t *c1, circle_t *c2) {
-    // this, for some unknonwn goddamn reason doesn't work
-    // https://flatredball.com/documentation/tutorials/math/circle-collision/
     double angle = atan2((c2->pos_y - c1->pos_y), (c2->pos_x - c1->pos_x));
     float distance_between_circles =
         (float)sqrt(
                 (c2->pos_x - c1->pos_x) * (c2->pos_x - c1->pos_x) +
                 (c2->pos_y - c1->pos_y) * (c2->pos_y - c1->pos_y));
-    
+
     float distance_to_move = c1->radius + c2->radius - distance_between_circles;
+
     c2->pos_x += cos(angle) * distance_to_move;
     c2->pos_y += sin(angle) * distance_to_move;
 
-    float temp_x = c1->vel_x;
-    float temp_y = c1->vel_y;
+    // this, for some unknonwn goddamn reason doesn't work
+    float fDistance = c1->radius + c2->radius;
 
-    c1->next_vel_x = c2->vel_x;
-    c1->next_vel_y = c2->vel_y;
+    // Normal
+    float nx = (c2->pos_x - c1->pos_x) / fDistance;
+    float ny = (c2->pos_y - c1->pos_y) / fDistance;
 
-    c2->next_vel_x = temp_x;
-    c2->next_vel_y = temp_y;
+    // Tangent
+    float tx = -ny;
+    float ty = nx;
 
-    //c1->vel_x = (c1->vel_x * (c1->mass - c2->mass) + (2 * c2->mass * c2->vel_x) / (c1->mass + c2->mass));
-    //c1->vel_y = (c1->vel_y * (c1->mass - c2->mass) + (2 * c2->mass * c2->vel_y) / (c1->mass + c2->mass));
+    // Dot Product Tangent
+    float dpTan1 = c1->vel_x * tx + c1->vel_y * ty;
+    float dpTan2 = c2->vel_x * tx + c2->vel_y * ty;
 
-    //c2->vel_x = (c2->vel_x * (c2->mass - c1->mass) + (2 * c1->mass * c1->vel_x) / (c2->mass + c1->mass));
-    //c2->vel_y = (c2->vel_y * (c2->mass - c1->mass) + (2 * c1->mass * c1->vel_y) / (c2->mass + c1->mass));
+    // Dot Product Normal
+    float dpNorm1 = c1->vel_x * nx + c1->vel_y * ny;
+    float dpNorm2 = c2->vel_x * nx + c2->vel_y * ny;
+
+    // Conservation of momentum in 1D
+    float m1 = (dpNorm1 * (c1->mass - c2->mass) + 2.0 * c2->mass * dpNorm2) / (c1->mass + c2->mass);
+    float m2 = (dpNorm2 * (c2->mass - c1->mass) + 2.0 * c1->mass * dpNorm1) / (c1->mass + c2->mass);
+
+    // Update ball velocities
+    c1->next_vel_x = tx * dpTan1 + nx * m1;
+    c1->next_vel_y = ty * dpTan1 + ny * m1;
+    c2->next_vel_x = tx * dpTan2 + nx * m2;
+    c2->next_vel_y = ty * dpTan2 + ny * m2;
+    /*
+       float temp_x = c1->vel_x;
+       float temp_y = c1->vel_y;
+
+    // c1->next_vel_x = c2->vel_x;
+    // c1->next_vel_y = c2->vel_y;
+
+    // c2->next_vel_x = temp_x;
+    // c2->next_vel_y = temp_y;
+
+    c1->next_vel_x = (c1->vel_x * (c1->mass - c2->mass) + (2 * c2->mass * c2->vel_x) / (c1->mass + c2->mass));
+    c1->next_vel_y = (c1->vel_y * (c1->mass - c2->mass) + (2 * c2->mass * c2->vel_y) / (c1->mass + c2->mass));
+
+    c2->next_vel_x = (c2->vel_x + c1->vel_x)
+    c2->next_vel_y = -(c2->vel_y * (c2->mass - c1->mass) + (2 * c1->mass * temp_y) / (c2->mass + c1->mass));
+    */
 }
