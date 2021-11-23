@@ -26,11 +26,14 @@ circle_t *circle_ctor (float pos_x_, float pos_y_, float radius_, int r_, int g_
     if (circle == NULL) {
         return circle;
     }
+    // create vector for position
+    circle->pos = vector_create(pos_x_, pos_y_);
 
-    circle->pos_x = pos_x_; // center x coordinate 
-    circle->pos_y = pos_y_; // center y coordinate 
-    circle->vel_x = 0; // x velocity
-    circle->vel_y = 0; // y velocity
+    // create vector for velocity
+    circle->vel = vector_create(0, 0);
+
+    // create copy of vel 
+    circle->next_vel = vector_create(pos_x_, pos_y_);
     circle->radius = radius_; // radius of circle
 
     circle->mass = CIRCLE_DEFAULT_MASS; // mass
@@ -52,101 +55,104 @@ void circle_draw (SDL_Renderer *r, circle_t *c) {
     {
         double dx = floor(sqrt((2.0 * c->radius * dy) - (dy * dy)));
         SDL_SetRenderDrawColor(r, c->r, c->g, c->b, c->a);
-        SDL_RenderDrawLine(r, c->pos_x - dx, c->pos_y + dy - c->radius, c->pos_x + dx, c->pos_y + dy - c->radius);
-        SDL_RenderDrawLine(r, c->pos_x - dx, c->pos_y - dy + c->radius, c->pos_x + dx, c->pos_y - dy + c->radius);
+        SDL_RenderDrawLine(r, c->pos->x - dx, c->pos->y + dy - c->radius, c->pos->x + dx, c->pos->y + dy - c->radius);
+        SDL_RenderDrawLine(r, c->pos->x - dx, c->pos->y - dy + c->radius, c->pos->x + dx, c->pos->y - dy + c->radius);
     }
 }
 
 // move circle by, restrain circle from leaving window
 void circle_move(circle_t *c) {
-    c->vel_x = c->next_vel_x;
-    c->vel_y = c->next_vel_y;
-    if (c->pos_x + c->vel_x > SCREEN_WIDTH - c->radius) {
-        if (c->vel_x > 0) {
-            c->vel_x *= -1;
+    c->vel->x = c->next_vel->x;
+    c->vel->y = c->next_vel->y;
+    if (c->pos->x + c->vel->x > SCREEN_WIDTH - c->radius) {
+        if (c->vel->x > 0) {
+            c->vel->x *= -1;
         }
     }
-    if (c->pos_x + c->vel_x < c->radius) {
-        if (c->vel_x < 0) {
-            c->vel_x *= -1;
+    if (c->pos->x + c->vel->x < c->radius) {
+        if (c->vel->x < 0) {
+            c->vel->x *= -1;
         }
     }
-    if (c->pos_y + c->vel_y > SCREEN_HEIGHT - c->radius) {
-        if (c->vel_y > 0) {
-            c->vel_y *= -1;
+    if (c->pos->y + c->vel->y > SCREEN_HEIGHT - c->radius) {
+        if (c->vel->y > 0) {
+            c->vel->y *= -1;
         }
     }
-    if (c->pos_y + c->vel_y < c->radius) {
-        if (c->vel_y < 0) {
-            c->vel_y *= -1;
+    if (c->pos->y + c->vel->y < c->radius) {
+        if (c->vel->y < 0) {
+            c->vel->y *= -1;
         }
     }
-    c->next_vel_x = c->vel_x;
-    c->next_vel_y = c->vel_y;
+    c->next_vel->x = c->vel->x;
+    c->next_vel->y = c->vel->y;
 
-    c->pos_x += c->vel_x;
-    c->pos_y += c->vel_y;
+    c->pos->x += c->vel->x;
+    c->pos->y += c->vel->y;
 }
 
 // set x velocity of circle
 void circle_set_vel_x(circle_t *c, float vel_x_) {
-    c->vel_x = c->next_vel_x = vel_x_;
+    c->vel->x = c->next_vel->x = vel_x_;
 }
 
 // set y velocity of circle
 void circle_set_vel_y(circle_t *c, float vel_y_) {
-    c->vel_y = c->next_vel_y = vel_y_;
+    c->vel->y = c->next_vel->y = vel_y_;
 }
 
 // set mass of circle
 void circle_set_mass(circle_t *c, float mass_) {
     if (mass_ >= CIRCLE_MIN_MASS && mass_ <= CIRCLE_MAX_MASS) {
         c->mass = mass_;
+        return;
     }
     fprintf(stderr, "Mass is not in valid range\n");
 }
 
 // function that is called when two circles collide
 void collide(circle_t *c1, circle_t *c2) {
-    double angle = atan2((c2->pos_y - c1->pos_y), (c2->pos_x - c1->pos_x));
+    double angle = atan2((c2->pos->y - c1->pos->y), (c2->pos->x - c1->pos->x));
     float distance_between_circles =
         (float)sqrt(
-                (c2->pos_x - c1->pos_x) * (c2->pos_x - c1->pos_x) +
-                (c2->pos_y - c1->pos_y) * (c2->pos_y - c1->pos_y));
+                (c2->pos->x - c1->pos->x) * (c2->pos->x - c1->pos->x) +
+                (c2->pos->y - c1->pos->y) * (c2->pos->y - c1->pos->y));
 
     float distance_to_move = c1->radius + c2->radius - distance_between_circles;
 
-    c2->pos_x += cos(angle) * distance_to_move;
-    c2->pos_y += sin(angle) * distance_to_move;
+    (void)angle;
+    (void)distance_to_move;
+    c2->pos->x += cos(angle) * distance_to_move;
+    c2->pos->y += sin(angle) * distance_to_move;
 
-    // this, for some unknonwn goddamn reason doesn't work
     float fDistance = c1->radius + c2->radius;
 
     // Normal
-    float nx = (c2->pos_x - c1->pos_x) / fDistance;
-    float ny = (c2->pos_y - c1->pos_y) / fDistance;
+    float nx = (c2->pos->x - c1->pos->x) / fDistance;
+    float ny = (c2->pos->y - c1->pos->y) / fDistance;
 
     // Tangent
     float tx = -ny;
     float ty = nx;
 
     // Dot Product Tangent
-    float dpTan1 = c1->vel_x * tx + c1->vel_y * ty;
-    float dpTan2 = c2->vel_x * tx + c2->vel_y * ty;
+    float dpTan1 = c1->vel->x * tx + c1->vel->y * ty;
+    float dpTan2 = c2->vel->x * tx + c2->vel->y * ty;
 
     // Dot Product Normal
-    float dpNorm1 = c1->vel_x * nx + c1->vel_y * ny;
-    float dpNorm2 = c2->vel_x * nx + c2->vel_y * ny;
+    float dpNorm1 = c1->vel->x * nx + c1->vel->y * ny;
+    float dpNorm2 = c2->vel->x * nx + c2->vel->y * ny;
 
     // Conservation of momentum in 1D
     float m1 = (dpNorm1 * (c1->mass - c2->mass) + 2.0 * c2->mass * dpNorm2) / (c1->mass + c2->mass);
     float m2 = (dpNorm2 * (c2->mass - c1->mass) + 2.0 * c1->mass * dpNorm1) / (c1->mass + c2->mass);
 
     // Update ball velocities
-    c1->next_vel_x = tx * dpTan1 + nx * m1;
-    c1->next_vel_y = ty * dpTan1 + ny * m1;
-    c2->next_vel_x = tx * dpTan2 + nx * m2;
-    c2->next_vel_y = ty * dpTan2 + ny * m2;
+    c1->next_vel->x = tx * dpTan1 + nx * m1;
+    c1->next_vel->y = ty * dpTan1 + ny * m1;
+
+    c2->next_vel->x = tx * dpTan2 + nx * m2;
+    c2->next_vel->y = ty * dpTan2 + ny * m2;
     /*
        float temp_x = c1->vel_x;
        float temp_y = c1->vel_y;
