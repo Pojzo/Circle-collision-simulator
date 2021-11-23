@@ -109,67 +109,6 @@ void collide(circle_t *c1, circle_t *c2) {
                 (c2->pos_y - c1->pos_y) * (c2->pos_y - c1->pos_y));
     
     float distance_to_move = c1->radius + c2->radius - distance_between_circles;
-
-    /*
-    printf("Circle1->pos_x: %f\n", c1->pos_x);
-    printf("Circle1->pos_y: %f\n", c1->pos_y);
-    printf("Circle2->pos_x: %f\n", c2->pos_x);
-    printf("Circle2->pos_y: %f\n", c2->pos_y);
-
-    printf("Circle1->vel_x: %f\n", c1->vel_x);
-    printf("Circle1->vel_y: %f\n", c1->vel_y);
-    printf("Circle2->vel_x: %f\n", c2->vel_x);
-    printf("Circle2->vel_y: %f\n", c2->vel_y);
-
-        //(void)distance_to_move;
-    //(void)angle;
-    printf("Angle: %f\n", angle);
-    printf("Distance between circles: %f\n", distance_between_circles);
-    printf("Distance to move: %f\n", distance_to_move);
-
-   
-    vector_t *tangent_vector = vector_create((c2->pos_y - c1->pos_y), -(c2->pos_x - c1->pos_x));
-    vector_t *relative_velocity = vector_create(c1->vel_x - c2->vel_x, c1->vel_y - c2->vel_y);
-
-    //printf("%f %f %f %f\n", c1->vel_x, c1->vel_y, c2->vel_x, c2->vel_y);
-    
-   // vector_print(tangent_vector);
-    printf("Tangent vector: ");
-    vector_print(tangent_vector);
-    printf("Relative velocity: : ");
-    vector_print(relative_velocity);
-    
-    
-    float length = vector_dot_product(relative_velocity, tangent_vector) / 100;
-
-    printf("Length: %f\n", length);
-
-    vector_t *velocity_component_on_tangent = vector_multiply(tangent_vector, length);
-    vector_t *velocity_component_perpendicular_to_tangent = vector_subtract(relative_velocity, velocity_component_on_tangent);
-
-    printf("Velocity component on tangent: ");
-    vector_print(velocity_component_on_tangent);
-    printf("Velocity velocity component perpendicular to tangent");
-    vector_print(velocity_component_perpendicular_to_tangent);
-
-    printf("--------------------------------------------\n");
-
-
-    //float sum_vel = abs(c1->vel_x) + abs(c1->vel_y) + abs(c2->vel_x) + abs(c2->vel_y); 
-    //float sum_other = 2 * abs(velocity_component_on_tangent->x) + 2 * abs(velocity_component_perpendicular_to_tangent->y);
-
-    c1->vel_x -= velocity_component_perpendicular_to_tangent->x;
-    c1->vel_y -= velocity_component_perpendicular_to_tangent->y;
-
-    c2->vel_x += velocity_component_perpendicular_to_tangent->x;
-    c2->vel_y += velocity_component_perpendicular_to_tangent->y;
-
-    vector_free(tangent_vector);
-    vector_free(relative_velocity);
-    vector_free(velocity_component_on_tangent);
-    vector_free(velocity_component_perpendicular_to_tangent);
-    */
-
     c2->pos_x += cos(angle) * distance_to_move;
     c2->pos_y += sin(angle) * distance_to_move;
 
