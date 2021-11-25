@@ -1,13 +1,13 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-static const int SCREEN_WIDTH = 640;
-static const int SCREEN_HEIGHT = 480;
+static const int SCREEN_WIDTH = 1000;
+static const int SCREEN_HEIGHT = 800;
 static const int FPS = 60;
 static const float DELAY_MS = 1000. / FPS;
 static const char WINDOW_NAME[]= "Window";
 
-static const int CIRCLE_DEFAULT_MASS = 1;
+static const float CIRCLE_DEFAULT_MASS = 1;
 static const float CIRCLE_MIN_MASS = 1;
 static const float CIRCLE_MAX_MASS = 100;
 

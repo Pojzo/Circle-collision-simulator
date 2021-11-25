@@ -37,13 +37,13 @@ int main(int argc, char **argv) {
         num_circles = atoi(argv[1]);
     }
 
-    const float mass_size_multiplier = 10;
     float radius; 
     float mass; 
     circle_t *circles[num_circles];  // array of circles
     for (int i = 0; i < num_circles; i++) {
-        mass = rand() % 50 + 20;
-        radius = mass;
+        mass = rand() % (int)CIRCLE_MAX_MASS;
+        // add 10 to radius so its not too small
+        radius = mass + 10;
 
         circle_t *circle;
         circle = circle_ctor(rand() % (int)(SCREEN_WIDTH - 2 * radius) + radius, (float)SCREEN_HEIGHT / 2, radius, rand() % 255, rand() % 255, rand() % 255, 255); // constructor for circle

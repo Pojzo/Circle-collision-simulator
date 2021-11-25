@@ -9,7 +9,7 @@ typedef struct Circle {
     vector_t *vel;
     vector_t *next_vel;
     float radius;
-    int mass;
+    float mass;
     int r;
     int g;
     int b;

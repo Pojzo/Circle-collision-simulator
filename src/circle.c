@@ -112,6 +112,8 @@ void circle_set_mass(circle_t *c, float mass_) {
 
 // function that is called when two circles collide
 void collide(circle_t *c1, circle_t *c2) {
+
+    // https://flatredball.com/documentation/tutorials/math/circle-collision/
     double angle = atan2((c2->pos->y - c1->pos->y), (c2->pos->x - c1->pos->x));
     float distance_between_circles =
         (float)sqrt(
@@ -120,10 +122,10 @@ void collide(circle_t *c1, circle_t *c2) {
 
     float distance_to_move = c1->radius + c2->radius - distance_between_circles;
 
-    (void)angle;
-    (void)distance_to_move;
     c2->pos->x += cos(angle) * distance_to_move;
     c2->pos->y += sin(angle) * distance_to_move;
+
+    //https://github.com/OneLoneCoder/videos/blob/master/OneLoneCoder_Balls1.cpp
 
     float fDistance = c1->radius + c2->radius;
 
@@ -153,20 +155,4 @@ void collide(circle_t *c1, circle_t *c2) {
 
     c2->next_vel->x = tx * dpTan2 + nx * m2;
     c2->next_vel->y = ty * dpTan2 + ny * m2;
-    /*
-       float temp_x = c1->vel_x;
-       float temp_y = c1->vel_y;
-
-    // c1->next_vel_x = c2->vel_x;
-    // c1->next_vel_y = c2->vel_y;
-
-    // c2->next_vel_x = temp_x;
-    // c2->next_vel_y = temp_y;
-
-    c1->next_vel_x = (c1->vel_x * (c1->mass - c2->mass) + (2 * c2->mass * c2->vel_x) / (c1->mass + c2->mass));
-    c1->next_vel_y = (c1->vel_y * (c1->mass - c2->mass) + (2 * c2->mass * c2->vel_y) / (c1->mass + c2->mass));
-
-    c2->next_vel_x = (c2->vel_x + c1->vel_x)
-    c2->next_vel_y = -(c2->vel_y * (c2->mass - c1->mass) + (2 * c1->mass * temp_y) / (c2->mass + c1->mass));
-    */
 }
