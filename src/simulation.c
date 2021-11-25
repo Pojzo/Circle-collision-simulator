@@ -9,8 +9,6 @@
 
 int main(int argc, char **argv) {
     srand(time(NULL));
-    (void)argc;
-    (void)argv;
     SDL_Window *window = NULL;
     SDL_Renderer *renderer = NULL;
 
@@ -33,6 +31,10 @@ int main(int argc, char **argv) {
     }
 
     int num_circles = 5;
+    if (argc > 2) {
+        fprintf(stderr, "Too many arguments\n");
+        return 1;
+    }
     if (argc == 2) {
         num_circles = atoi(argv[1]);
     }
