@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
     for (int i = 0; i < num_circles; i++) {
         mass = rand() % (int)CIRCLE_MAX_MASS;
         // add 10 to radius so its not too small
-        radius = mass + 10;
+        radius = mass;
 
         circle_t *circle;
         circle = circle_ctor(rand() % (int)(SCREEN_WIDTH - 2 * radius) + radius, (float)SCREEN_HEIGHT / 2, radius, rand() % 255, rand() % 255, rand() % 255, 255); // constructor for circle
